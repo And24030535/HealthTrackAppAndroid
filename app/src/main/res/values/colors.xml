@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Paleta principal HealthTrack -->
+    <color name="ht_bg_deep">#0d2137</color>         <!-- fondo oscuro principal -->
+    <color name="ht_bg_card">#152231</color>          <!-- tarjetas / formularios -->
+    <color name="ht_bg_input">#1e3a54</color>         <!-- campos de texto -->
+    <color name="ht_border">#2a4d6e</color>           <!-- bordes de input -->
+    <color name="ht_primary">#1976d2</color>          <!-- botones principales -->
+    <color name="ht_primary_dark">#1565c0</color>     <!-- pressed / ripple -->
+    <color name="ht_accent">#42a5f5</color>           <!-- enlaces, acentos -->
+    <color name="ht_text_primary">#FFFFFF</color>     <!-- texto principal -->
+    <color name="ht_text_secondary">#B0C4D8</color>  <!-- subtitulos, labels -->
+    <color name="ht_text_hint">#4d7a9e</color>        <!-- hints en inputs -->
+
+    <!-- Indicadores de estado clinico -->
+    <color name="ht_status_red">#4A1010</color>       <!-- riesgo alto -->
+    <color name="ht_status_amber">#3A2E00</color>     <!-- IMC elevado -->
+    <color name="ht_status_green">#0D2B0D</color>     <!-- normal -->
+    <color name="ht_status_red_text">#FF6B6B</color>
+    <color name="ht_status_amber_text">#FFD54F</color>
+    <color name="ht_status_green_text">#81C784</color>
+</resources>

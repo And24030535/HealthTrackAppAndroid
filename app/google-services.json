@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "763656144784",
+    "project_id": "proyectofinaldb-d7199",
+    "storage_bucket": "proyectofinaldb-d7199.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:763656144784:android:f0ea3c300036cb668f1515",
+        "android_client_info": {
+          "package_name": "com.itc.healthtrackandroid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOlSDOZdQMwxy6Ev9t2hUbcV3PiB_4paI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

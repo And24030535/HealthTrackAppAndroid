@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0d2137"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingBottom="40dp">
+
+        <!-- ═══════════════════════════════════════════
+             ENCABEZADO — equivalente al panel izquierdo
+             del escritorio (icono + nombre + clínica)
+             ═══════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="40dp"
+            android:paddingBottom="28dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <!--
+                Icono corazon + pulso ECG.
+                Si tienes un logo propio, coloca el archivo en
+                res/drawable/ic_healthtrack_logo.png y cambia el src.
+            -->
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:src="@drawable/ic_healthtrack_logo"
+                android:contentDescription="Logo HealthTrack"/>
+
+            <!-- Nombre de la app -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HealthTrack Community"
+                android:textColor="#FFFFFF"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"/>
+
+            <!-- Nombre de la clínica -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clínica OwO"
+                android:textColor="#42a5f5"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginTop="6dp"/>
+
+            <!-- Eslogan -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tu salud, nuestra prioridad"
+                android:textColor="@color/ht_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp"/>
+
+        </LinearLayout>
+
+        <!-- ═══════════════════════════════════════════
+             TARJETA DEL FORMULARIO
+             ═══════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_login_form"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:padding="28dp">
+
+            <!-- Etiqueta correo -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CORREO ELECTRÓNICO"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/emailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="usuario@correo.com"
+                android:textColorHint="#4d7a9e"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_input_field"
+                android:inputType="textEmailAddress"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="22dp"/>
+
+            <!-- Etiqueta contraseña -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CONTRASEÑA"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="••••••••"
+                android:textColorHint="#4d7a9e"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_input_field"
+                android:inputType="textPassword"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="32dp"/>
+
+            <!-- Botón iniciar sesión con icono de flecha -->
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Iniciar Sesión"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:backgroundTint="#1976d2"
+                android:drawableStart="@drawable/ic_login_arrow"
+                android:drawablePadding="10dp"/>
+
+        </LinearLayout>
+
+        <!-- ═══════════════════════════════════════════
+             ENLACE DE REGISTRO
+             ═══════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¿No tienes cuenta? "
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/registerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Crear Cuenta"
+                android:textColor="#42a5f5"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="4dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

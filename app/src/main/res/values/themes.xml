@@ -1,0 +1,34 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Base.Theme.HealthTrackAndroid" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/ht_primary</item>
+        <item name="colorPrimaryVariant">@color/ht_primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/ht_accent</item>
+        <item name="colorOnSecondary">@color/ht_bg_deep</item>
+        <item name="android:windowBackground">@color/ht_bg_deep</item>
+        <item name="android:statusBarColor">@color/ht_bg_deep</item>
+        <item name="android:navigationBarColor">@color/ht_bg_deep</item>
+    </style>
+
+    <style name="Theme.HealthTrackAndroid" parent="Base.Theme.HealthTrackAndroid" />
+
+    <!-- Boton primario global: fondo azul + esquinas redondeadas -->
+    <style name="Widget.HealthTrack.Button" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/ht_primary</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="cornerRadius">4dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+    </style>
+
+    <!-- Boton secundario (p.ej. Cerrar Sesion) -->
+    <style name="Widget.HealthTrack.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/ht_accent</item>
+        <item name="android:textColor">@color/ht_accent</item>
+        <item name="cornerRadius">4dp</item>
+    </style>
+
+</resources>
