@@ -13,7 +13,7 @@ import com.itc.healthtrackandroid.dao.GenericDAO
 import com.itc.healthtrackandroid.dao.OnSingleDataLoadedListener
 import com.itc.healthtrackandroid.models.User
 
-// pantalla de inicio de sesion para pacientes con flujo correo y contrasena hacia firebase auth
+// pantalla de inicio de sesion para pacientes con flujo correo y contrasena hacia Firebase Auth
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var emailEditText: EditText
@@ -28,24 +28,21 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // inicializamos firebase auth y el dao de usuarios
         auth    = FirebaseAuth.getInstance()
         userDao = GenericDAO(User::class.java, "users")
 
-        // conectamos cada vista con su variable en kotlin
         emailEditText    = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         loginButton      = findViewById(R.id.loginButton)
         registerTextView = findViewById(R.id.registerTextView)
 
-        // asignamos los listeners de los botones
         loginButton.setOnClickListener { performLogin() }
 
         registerTextView.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
 
-        // si el usuario ya tiene sesion activa lo mandamos directo al dashboard
+        // si el paciente ya tiene sesion activa lo mandamos directo al dashboard sin que tenga que escribir nada
         val existingUser = auth.currentUser
         if (existingUser != null) {
             loginButton.isEnabled = false
@@ -53,22 +50,18 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // login
-
     private fun performLogin() {
         val email    = emailEditText.text.toString().trim()
         val password = passwordEditText.text.toString().trim()
 
-        // verificamos que los campos no esten vacios antes de continuar
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Por favor ingresa correo y contraseña", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // deshabilitamos el boton para evitar doble envio
+        // deshabilitamos el boton para evitar que el paciente lo toque dos veces seguidas
         loginButton.isEnabled = false
 
-        // intentamos autenticar al usuario con firebase
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -85,14 +78,12 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
+    // busca el perfil del usuario en Firestore para saber su rol y nombre antes de navegar
     private fun fetchUserAndNavigate(userId: String) {
-        // buscamos el perfil del usuario en firestore para saber su rol
         userDao.getById(userId, object : OnSingleDataLoadedListener<User> {
 
             override fun onSuccess(data: User?) {
-                // evitamos actualizar la pantalla si ya se cerro
                 if (isFinishing || isDestroyed) return
-                // si no existe el perfil en firestore avisamos y cancelamos
                 if (data == null) {
                     Toast.makeText(
                         this@LoginActivity,
@@ -117,10 +108,8 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
-    // navegacion
-
+    // lanza el dashboard limpiando el historial para que al presionar atras se cierre la app
     private fun navigateToDashboard(data: User) {
-        // limpiamos el historial de actividades para que al presionar atras se cierre la app
         val intent = Intent(this, DashboardActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra("USER_ROLE", data.role)

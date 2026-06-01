@@ -8,7 +8,7 @@ import com.itc.healthtrackandroid.receivers.ReminderReceiver
 import java.util.Calendar
 import java.util.TimeZone
 
-// gestiona la programacion y cancelacion del recordatorio diario con AlarmManager usando el huso horario local
+// gestiona la programacion y cancelacion del recordatorio diario con AlarmManager usando el huso horario local del dispositivo
 object ReminderScheduler {
 
     private const val REQUEST_CODE = 2001
@@ -17,22 +17,22 @@ object ReminderScheduler {
     private const val KEY_MINUTE   = "reminder_minute"
     private const val KEY_ENABLED  = "reminder_enabled"
 
-    // programa el recordatorio diario a la hora indicada y cancela cualquier alarma anterior
+    // guarda la hora elegida cancela cualquier alarma anterior y programa la nueva con repeticion diaria
     fun schedule(context: Context, hour: Int, minute: Int) {
-        // guardamos la hora elegida en SharedPreferences para poder recuperarla despues
+        // guardamos la hora en SharedPreferences para poder recuperarla despues del reinicio
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
             .putInt(KEY_HOUR, hour)
             .putInt(KEY_MINUTE, minute)
             .putBoolean(KEY_ENABLED, true)
             .apply()
 
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmManager  = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = buildPendingIntent(context)
 
-        // cancelamos la alarma anterior para evitar duplicados
+        // cancelamos primero para no acumular alarmas duplicadas del mismo recordatorio
         alarmManager.cancel(pendingIntent)
 
-        // calculamos el proximo disparo usando el huso horario local del dispositivo
+        // calculamos el proximo disparo con el huso horario local del dispositivo
         val calendar = Calendar.getInstance(TimeZone.getDefault())
         calendar.set(Calendar.HOUR_OF_DAY, hour)
         calendar.set(Calendar.MINUTE, minute)
@@ -44,7 +44,7 @@ object ReminderScheduler {
             calendar.add(Calendar.DAY_OF_YEAR, 1)
         }
 
-        // setInexactRepeating no requiere permiso especial y alcanza para recordatorios diarios
+        // setInexactRepeating no requiere permiso especial y es suficiente para recordatorios diarios
         alarmManager.setInexactRepeating(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
@@ -53,9 +53,8 @@ object ReminderScheduler {
         )
     }
 
-    // cancela el recordatorio activo y borra la configuracion guardada
+    // cancela la alarma activa y marca el recordatorio como desactivado en SharedPreferences
     fun cancel(context: Context) {
-        // desactivamos el recordatorio y borramos la configuracion guardada
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
             .putBoolean(KEY_ENABLED, false)
             .apply()
@@ -64,9 +63,9 @@ object ReminderScheduler {
         alarmManager.cancel(buildPendingIntent(context))
     }
 
-    // devuelve la hora y minuto guardados o null si no hay recordatorio activo
+    // devuelve la hora y el minuto guardados o null si el recordatorio esta desactivado
     fun getSavedTime(context: Context): Pair<Int, Int>? {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val prefs  = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         if (!prefs.getBoolean(KEY_ENABLED, false)) return null
         val hour   = prefs.getInt(KEY_HOUR, -1)
         val minute = prefs.getInt(KEY_MINUTE, -1)

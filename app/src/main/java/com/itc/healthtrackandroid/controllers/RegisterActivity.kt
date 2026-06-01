@@ -15,7 +15,7 @@ import com.itc.healthtrackandroid.dao.OnOperationCompleteListener
 import com.itc.healthtrackandroid.models.User
 import java.util.Calendar
 
-// pantalla de registro de pacientes que crea la cuenta en firebase auth y guarda el perfil completo en firestore
+// pantalla de registro que crea la cuenta en Firebase Auth y luego guarda el perfil completo en Firestore
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var firstNameEditText: EditText
@@ -30,34 +30,31 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var userDao: GenericDAO<User>
 
-    // fecha seleccionada en el picker en formato YYYY-MM-DD
+    // fecha seleccionada en el picker guardada como texto en formato yyyy-MM-dd
     private var selectedBirthDate: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        // inicializamos firebase auth y el dao para guardar el perfil
         auth    = FirebaseAuth.getInstance()
         userDao = GenericDAO(User::class.java, "users")
 
-        // conectamos los campos del formulario con sus variables
-        firstNameEditText  = findViewById(R.id.firstNameEditText)
-        lastNameEditText   = findViewById(R.id.lastNameEditText)
-        emailEditText      = findViewById(R.id.emailEditText)
-        passwordEditText   = findViewById(R.id.passwordEditText)
-        heightEditText     = findViewById(R.id.heightEditText)
-        birthDateButton    = findViewById(R.id.birthDateButton)
-        birthDateTextView  = findViewById(R.id.birthDateTextView)
-        registerButton     = findViewById(R.id.registerButton)
+        firstNameEditText = findViewById(R.id.firstNameEditText)
+        lastNameEditText  = findViewById(R.id.lastNameEditText)
+        emailEditText     = findViewById(R.id.emailEditText)
+        passwordEditText  = findViewById(R.id.passwordEditText)
+        heightEditText    = findViewById(R.id.heightEditText)
+        birthDateButton   = findViewById(R.id.birthDateButton)
+        birthDateTextView = findViewById(R.id.birthDateTextView)
+        registerButton    = findViewById(R.id.registerButton)
 
         birthDateButton.setOnClickListener { openDatePicker() }
-        registerButton.setOnClickListener { performRegistration() }
+        registerButton.setOnClickListener  { performRegistration() }
     }
 
-    // abre el selector y guarda la fecha en formato ISO
+    // abre el selector de fecha y guarda el resultado en formato ISO para mostrarlo en la pantalla
     private fun openDatePicker() {
-        // abrimos el selector de fecha y guardamos el resultado en formato ISO
         val cal = Calendar.getInstance()
         DatePickerDialog(
             this,
@@ -71,45 +68,42 @@ class RegisterActivity : AppCompatActivity() {
         ).show()
     }
 
-    // valida los campos obligatorios y crea la cuenta
+    // valida todos los campos y crea la cuenta de Firebase Auth antes de guardar el perfil
     private fun performRegistration() {
         val firstName = firstNameEditText.text.toString().trim()
         val lastName  = lastNameEditText.text.toString().trim()
         val email     = emailEditText.text.toString().trim()
         val password  = passwordEditText.text.toString().trim()
 
-        // validamos que todos los campos obligatorios tengan valor
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // la contrasena debe tener al menos 6 caracteres para firebase
+        // Firebase exige al menos 6 caracteres para la contrasena
         if (password.length < 6) {
             Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // la altura es opcional pero la necesitamos para calcular el IMC despues
+        // la altura es opcional pero la necesitamos despues para calcular el IMC
         val heightRaw = heightEditText.text.toString().trim()
-        val height = heightRaw.toDoubleOrNull()
+        val height    = heightRaw.toDoubleOrNull()
 
-        // validamos que la altura sea un numero razonable si se ingresa
         if (heightRaw.isNotEmpty() && (height == null || height <= 0.0 || height > 3.0)) {
             Toast.makeText(this, "Estatura inválida (usa metros, ej. 1.75)", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // exigimos la fecha de nacimiento para que el doctor tenga la edad del paciente
+        // pedimos la fecha de nacimiento para que el medico pueda ver la edad del paciente
         if (selectedBirthDate.isNullOrEmpty()) {
             Toast.makeText(this, "Por favor selecciona tu fecha de nacimiento", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // deshabilitamos el boton para evitar doble registro
+        // deshabilitamos el boton para que el paciente no envie el formulario dos veces
         registerButton.isEnabled = false
 
-        // creamos la cuenta en firebase auth con correo y contrasena
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -126,7 +120,7 @@ class RegisterActivity : AppCompatActivity() {
             }
     }
 
-    // guarda el perfil del paciente en firestore y navega al dashboard
+    // guarda el perfil del paciente en Firestore y navega al dashboard una vez creado
     private fun saveUserProfile(
         userId: String,
         firstName: String,
@@ -134,7 +128,6 @@ class RegisterActivity : AppCompatActivity() {
         email: String,
         height: Double?
     ) {
-        // armamos el objeto de usuario con el rol de paciente y lo guardamos en firestore
         val newUser = User(
             uid       = userId,
             email     = email,
@@ -150,7 +143,7 @@ class RegisterActivity : AppCompatActivity() {
             override fun onSuccess() {
                 if (isFinishing || isDestroyed) return
                 Toast.makeText(this@RegisterActivity, "Cuenta creada exitosamente", Toast.LENGTH_SHORT).show()
-                // limpiamos el historial de actividades igual que en el login
+                // limpiamos el historial de actividades igual que en el flujo de login
                 val intent = Intent(this@RegisterActivity, DashboardActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     putExtra("USER_ROLE", "patient")
@@ -162,7 +155,7 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             override fun onFailure(error: Exception) {
-                // revertimos la cuenta de firebase auth para no dejar cuentas huerfanas sin perfil en firestore
+                // borramos la cuenta de Firebase Auth para no dejar cuentas huerfanas sin perfil en Firestore
                 auth.currentUser?.delete()
                 if (isFinishing || isDestroyed) return
                 Toast.makeText(

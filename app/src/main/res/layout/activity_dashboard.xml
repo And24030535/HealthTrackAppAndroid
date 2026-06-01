@@ -80,6 +80,54 @@
             android:backgroundTint="#1a5c4a"
             android:textColor="@color/white"
             android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- FEATURE 3 — contactos de emergencia -->
+        <Button
+            android:id="@+id/emergencyContactsButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Contactos de Emergencia"
+            android:backgroundTint="#7a1a3a"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- FEATURE 5 — citas medicas -->
+        <Button
+            android:id="@+id/appointmentsButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Mis Citas"
+            android:backgroundTint="#3a2a6e"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- FEATURE 4 — alergias del paciente -->
+        <Button
+            android:id="@+id/allergiesButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Mis Alergias"
+            android:backgroundTint="#4a3a1a"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- FEATURE 5 — notificaciones del paciente -->
+        <Button
+            android:id="@+id/notificationsButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Notificaciones"
+            android:backgroundTint="#1a3a5a"
+            android:textColor="@color/white"
+            android:textSize="15sp"
             android:textStyle="bold"/>
 
     </LinearLayout>

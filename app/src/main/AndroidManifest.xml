@@ -29,10 +29,23 @@
         <activity android:name=".controllers.DashboardActivity" />
         <activity android:name=".controllers.AddMetricActivity" />
         <activity android:name=".controllers.HistoryActivity" />
+        <!-- FEATURE 3 — contactos de emergencia -->
+        <activity android:name=".controllers.EmergencyContactsActivity" />
+        <!-- FEATURE 5 — citas medicas -->
+        <activity android:name=".controllers.AppointmentsActivity" />
+        <!-- FEATURE 4 — alergias del paciente -->
+        <activity android:name=".controllers.AllergiesActivity" />
+        <!-- FEATURE 5 — panel de notificaciones -->
+        <activity android:name=".controllers.NotificationsActivity" />
 
         <!-- Receptor del AlarmManager para mostrar el recordatorio diario -->
         <receiver
             android:name=".receivers.ReminderReceiver"
+            android:exported="false" />
+
+        <!-- FEATURE 3 (Android) — receptor de recordatorios de medicamentos -->
+        <receiver
+            android:name=".receivers.MedicationReminderReceiver"
             android:exported="false" />
 
         <!-- Receptor de arranque del sistema para reprogramar alarmas tras reinicio -->

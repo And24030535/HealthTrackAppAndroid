@@ -6,12 +6,11 @@ import android.content.Intent
 import android.util.Log
 import com.itc.healthtrackandroid.services.NotificationHelper
 
-// receiver que el sistema activa cuando llega la hora del recordatorio y solo muestra la notificacion
+// el AlarmManager activa este receiver a la hora programada y solo tiene que mostrar el recordatorio
 class ReminderReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("ReminderReceiver", "onReceive disparado por el AlarmManager")
-        // cuando suena la alarma mostramos la notificacion de recordatorio al paciente
         NotificationHelper.showReminderNotification(context)
     }
 }

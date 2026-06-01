@@ -13,44 +13,40 @@ import com.itc.healthtrackandroid.dao.GenericDAO
 import com.itc.healthtrackandroid.dao.OnDataLoadedListener
 import com.itc.healthtrackandroid.models.Metric
 
-// historial de metricas del paciente con listener en tiempo real y adaptador reutilizado
+// historial de metricas del paciente con listener en tiempo real y adaptador de colores clinicos
 class HistoryActivity : AppCompatActivity() {
 
     private lateinit var historyRecyclerView: RecyclerView
     private lateinit var auth: FirebaseAuth
     private lateinit var metricDao: GenericDAO<Metric>
 
-    // adaptador creado una sola vez en onCreate que no se reemplaza con cada actualizacion de firestore
+    // el adaptador se crea una sola vez en onCreate y se actualiza con los datos que llegan de Firestore
     private lateinit var metricsAdapter: ColoredMetricAdapter
 
-    // referencia al listener en tiempo real que se cancela en onDestroy para evitar fugas de memoria
+    // guardamos la referencia al listener para cancelarlo en onDestroy y evitar fugas de memoria
     private var metricsListener: ListenerRegistration? = null
 
-    // bandera para mostrar el aviso de sin registros solo la primera vez
+    // bandera para mostrar el aviso de sin registros solo la primera vez y no repetirlo en cada actualizacion
     private var emptyToastShown = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
 
-        // inicializamos firebase y el dao de metricas
-        auth = FirebaseAuth.getInstance()
+        auth      = FirebaseAuth.getInstance()
         metricDao = GenericDAO(Metric::class.java, "metrics")
 
         historyRecyclerView = findViewById(R.id.historyRecyclerView)
         historyRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        // creamos el adaptador con lista vacia y lo asignamos una unica vez
         metricsAdapter = ColoredMetricAdapter(mutableListOf())
         historyRecyclerView.adapter = metricsAdapter
 
-        // arrancamos el listener en tiempo real para ver los registros del paciente
         startListeningMetrics()
     }
 
-    // registra un listener en tiempo real en firestore que solo llama a updateData en el adaptador existente
+    // registra el listener en tiempo real filtrando por el id del paciente actual
     private fun startListeningMetrics() {
-        // si no hay sesion activa mandamos al login
         val currentUserId = auth.currentUser?.uid
 
         if (currentUserId == null) {
@@ -59,23 +55,21 @@ class HistoryActivity : AppCompatActivity() {
             return
         }
 
-        // registramos el listener en tiempo real filtrando por el id del paciente
         metricsListener = metricDao.listenByField(
             "patientId",
             currentUserId,
             object : OnDataLoadedListener<Metric> {
                 override fun onSuccess(data: List<Metric>) {
-                    // evitamos refrescar la lista si la pantalla ya se cerro
                     if (isFinishing || isDestroyed) return
                     if (data.isEmpty()) {
-                        // si no hay registros limpiamos el adaptador y avisamos al paciente solo una vez
                         metricsAdapter.updateData(emptyList())
+                        // avisamos al paciente solo la primera vez para no interrumpirlo con el mismo Toast repetido
                         if (!emptyToastShown) {
                             Toast.makeText(this@HistoryActivity, "Sin registros aún", Toast.LENGTH_SHORT).show()
                             emptyToastShown = true
                         }
                     } else {
-                        // ordenamos la lista de mas nueva a mas vieja y actualizamos el adaptador
+                        // ordenamos de mas reciente a mas antiguo antes de actualizar el adaptador
                         val sortedList = data.sortedByDescending { it.timestamp }
                         metricsAdapter.updateData(sortedList)
                     }
@@ -83,11 +77,7 @@ class HistoryActivity : AppCompatActivity() {
 
                 override fun onFailure(error: Exception) {
                     if (isFinishing || isDestroyed) return
-                    Toast.makeText(
-                        this@HistoryActivity,
-                        "Error al cargar el historial",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this@HistoryActivity, "Error al cargar el historial", Toast.LENGTH_SHORT).show()
                 }
             }
         )
@@ -95,7 +85,7 @@ class HistoryActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // cerramos el listener para no desperdiciar recursos cuando la pantalla se cierra
+        // cerramos el listener para liberar recursos cuando la pantalla se cierra
         metricsListener?.remove()
         metricsListener = null
     }
